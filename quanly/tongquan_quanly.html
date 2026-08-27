@@ -1,0 +1,2525 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Tổng quan quản lý | Coffee House</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        :root {
+
+            --brown: #4b2917;
+            --brown-dark: #321c10;
+
+            --orange: #c96810;
+            --orange-light: #e58a35;
+
+            --cream: #f7efe7;
+            --white: #ffffff;
+
+            --text: #3d2a20;
+            --gray: #81746c;
+
+            --border: #eaded4;
+
+            --green: #398a55;
+            --red: #c74b3c;
+            --blue: #4d78a8;
+
+        }
+
+
+        body {
+
+            font-family:
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background: #f6f1ed;
+
+            color: var(--text);
+
+            min-height: 100vh;
+
+        }
+
+
+        /* =====================================
+           LAYOUT
+        ===================================== */
+
+        .dashboard {
+
+            display: flex;
+
+            min-height: 100vh;
+
+        }
+
+
+        /* =====================================
+           SIDEBAR
+        ===================================== */
+
+        .sidebar {
+
+            width: 250px;
+
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #4b2917,
+                    #321c10
+                );
+
+            color: white;
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            padding: 22px 15px;
+
+            z-index: 100;
+
+        }
+
+
+        /* LOGO */
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                5px
+                10px
+                25px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.12);
+
+        }
+
+
+        .brand img {
+
+            width: 52px;
+
+            height: 52px;
+
+            object-fit: contain;
+
+            border-radius: 50%;
+
+            background: #fff8ef;
+
+            padding: 4px;
+
+        }
+
+
+        .brand-text h2 {
+
+            font-size: 18px;
+
+            font-weight: 800;
+
+        }
+
+
+        .brand-text span {
+
+            font-size: 11px;
+
+            color: #d8bca6;
+
+        }
+
+
+        /* MENU */
+
+        .menu {
+
+            margin-top: 25px;
+
+        }
+
+
+        .menu-title {
+
+            font-size: 11px;
+
+            color: #bda494;
+
+            text-transform: uppercase;
+
+            margin:
+                0
+                12px
+                8px;
+
+            letter-spacing: 1px;
+
+        }
+
+
+        .menu-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            width: 100%;
+
+            padding:
+                13px
+                14px;
+
+            margin-bottom: 5px;
+
+            border-radius: 10px;
+
+            color: #eaded6;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+
+        }
+
+
+        .menu-item:hover {
+
+            background:
+                rgba(255,255,255,0.09);
+
+            color: white;
+
+        }
+
+
+        .menu-item.active {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #d57218,
+                    #b95708
+                );
+
+            color: white;
+
+            box-shadow:
+                0 5px 15px
+                rgba(0,0,0,0.18);
+
+        }
+
+
+        .menu-icon {
+
+            width: 21px;
+
+            height: 21px;
+
+            flex-shrink: 0;
+
+        }
+
+
+        /* =====================================
+           MAIN
+        ===================================== */
+
+        .main {
+
+            margin-left: 250px;
+
+            width: calc(100% - 250px);
+
+            min-height: 100vh;
+
+        }
+
+
+        /* =====================================
+           HEADER
+        ===================================== */
+
+        .header {
+
+            height: 78px;
+
+            background: white;
+
+            border-bottom:
+                1px solid
+                var(--border);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0
+                32px;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 50;
+
+        }
+
+
+        .header-left h1 {
+
+            font-size: 24px;
+
+            color: var(--brown);
+
+        }
+
+
+        .header-left p {
+
+            font-size: 13px;
+
+            color: var(--gray);
+
+            margin-top: 3px;
+
+        }
+
+
+        .header-right {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 20px;
+
+        }
+
+
+        .notification {
+
+            width: 40px;
+
+            height: 40px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid
+                var(--border);
+
+            background: #fffaf6;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            cursor: pointer;
+
+            position: relative;
+
+            color: var(--brown);
+
+        }
+
+
+        .notification svg {
+
+            width: 20px;
+
+        }
+
+
+        .notification-badge {
+
+            position: absolute;
+
+            top: 5px;
+
+            right: 5px;
+
+            width: 7px;
+
+            height: 7px;
+
+            background: var(--orange);
+
+            border-radius: 50%;
+
+        }
+
+
+        .manager {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
+
+        .manager-avatar {
+
+            width: 40px;
+
+            height: 40px;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #d88b4b,
+                    #9c4c18
+                );
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-weight: 700;
+
+        }
+
+
+        .manager-info strong {
+
+            display: block;
+
+            font-size: 14px;
+
+        }
+
+
+        .manager-info span {
+
+            font-size: 12px;
+
+            color: var(--gray);
+
+        }
+
+
+        /* =====================================
+           CONTENT
+        ===================================== */
+
+        .content {
+
+            padding: 30px 32px;
+
+        }
+
+
+        /* =====================================
+           WELCOME
+        ===================================== */
+
+        .welcome {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .welcome h2 {
+
+            font-size: 22px;
+
+            color: var(--brown);
+
+        }
+
+
+        .welcome p {
+
+            color: var(--gray);
+
+            margin-top: 5px;
+
+            font-size: 14px;
+
+        }
+
+
+        .date-box {
+
+            background: white;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 9px;
+
+            padding:
+                10px
+                15px;
+
+            color: var(--gray);
+
+            font-size: 13px;
+
+        }
+
+
+        /* =====================================
+           STAT CARDS
+        ===================================== */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .stat-card {
+
+            background: white;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            position: relative;
+
+            overflow: hidden;
+
+            transition: 0.25s;
+
+        }
+
+
+        .stat-card:hover {
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 10px 25px
+                rgba(80,45,20,0.08);
+
+        }
+
+
+        .stat-top {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+        }
+
+
+        .stat-icon {
+
+            width: 46px;
+
+            height: 46px;
+
+            border-radius: 12px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #fff3e7;
+
+            color: var(--orange);
+
+        }
+
+
+        .stat-icon svg {
+
+            width: 23px;
+
+        }
+
+
+        .stat-label {
+
+            color: var(--gray);
+
+            font-size: 13px;
+
+            margin-top: 15px;
+
+        }
+
+
+        .stat-number {
+
+            font-size: 27px;
+
+            font-weight: 800;
+
+            color: var(--brown);
+
+            margin-top: 5px;
+
+        }
+
+
+        .stat-change {
+
+            font-size: 12px;
+
+            margin-top: 8px;
+
+        }
+
+
+        .increase {
+
+            color: var(--green);
+
+        }
+
+
+        .decrease {
+
+            color: var(--red);
+
+        }
+
+
+        /* =====================================
+           GRID
+        ===================================== */
+
+        .dashboard-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                2fr 1fr;
+
+            gap: 20px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .card {
+
+            background: white;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 14px;
+
+            padding: 22px;
+
+        }
+
+
+        .card-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .card-header h3 {
+
+            font-size: 17px;
+
+            color: var(--brown);
+
+        }
+
+
+        .view-all {
+
+            color: var(--orange);
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            text-decoration: none;
+
+        }
+
+
+        /* =====================================
+           CHART
+        ===================================== */
+
+        .chart {
+
+            height: 270px;
+
+            display: flex;
+
+            align-items: flex-end;
+
+            gap: 18px;
+
+            padding:
+                15px
+                10px
+                0;
+
+            border-bottom:
+                1px solid
+                #e7ddd6;
+
+        }
+
+
+        .bar-item {
+
+            flex: 1;
+
+            height: 100%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: flex-end;
+
+            align-items: center;
+
+            gap: 8px;
+
+        }
+
+
+        .bar {
+
+            width: 55%;
+
+            max-width: 42px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #e58a35,
+                    #b95708
+                );
+
+            border-radius:
+                7px
+                7px
+                0
+                0;
+
+            transition: 0.3s;
+
+        }
+
+
+        .bar:hover {
+
+            opacity: 0.75;
+
+        }
+
+
+        .bar-label {
+
+            font-size: 11px;
+
+            color: var(--gray);
+
+        }
+
+
+        /* =====================================
+           BEST SELLING
+        ===================================== */
+
+        .product {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                12px
+                0;
+
+            border-bottom:
+                1px solid
+                #f0e8e2;
+
+        }
+
+
+        .product:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .product-image {
+
+            width: 45px;
+
+            height: 45px;
+
+            border-radius: 9px;
+
+            background: #f4e6da;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 21px;
+
+        }
+
+
+        .product-info {
+
+            flex: 1;
+
+        }
+
+
+        .product-info strong {
+
+            display: block;
+
+            font-size: 14px;
+
+        }
+
+
+        .product-info span {
+
+            font-size: 12px;
+
+            color: var(--gray);
+
+        }
+
+
+        .product-price {
+
+            color: var(--orange);
+
+            font-weight: 700;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =====================================
+           ORDERS
+        ===================================== */
+
+        .order-table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+        }
+
+
+        .order-table th {
+
+            text-align: left;
+
+            font-size: 12px;
+
+            color: #8d8077;
+
+            font-weight: 600;
+
+            padding:
+                12px
+                10px;
+
+            background: #faf7f4;
+
+        }
+
+
+        .order-table td {
+
+            padding:
+                14px
+                10px;
+
+            border-bottom:
+                1px solid
+                #eee5de;
+
+            font-size: 13px;
+
+        }
+
+
+        .order-code {
+
+            font-weight: 700;
+
+            color: var(--brown);
+
+        }
+
+
+        .status {
+
+            display: inline-block;
+
+            padding:
+                5px
+                10px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+        }
+
+
+        .status.success {
+
+            background: #edf8f0;
+
+            color: var(--green);
+
+        }
+
+
+        .status.pending {
+
+            background: #fff5e8;
+
+            color: #bb6b14;
+
+        }
+
+
+        .status.cancel {
+
+            background: #fff0ee;
+
+            color: var(--red);
+
+        }
+
+
+        /* =====================================
+           QUICK ACTION
+        ===================================== */
+
+        .quick-actions {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+
+        }
+
+
+        .quick-btn {
+
+            border:
+                1px solid
+                var(--border);
+
+            background: #fffaf7;
+
+            border-radius: 10px;
+
+            padding: 15px 10px;
+
+            text-align: center;
+
+            text-decoration: none;
+
+            color: var(--brown);
+
+            transition: 0.2s;
+
+        }
+
+
+        .quick-btn:hover {
+
+            border-color: var(--orange);
+
+            background: #fff5ed;
+
+            transform:
+                translateY(-2px);
+
+        }
+
+
+        .quick-btn svg {
+
+            width: 24px;
+
+            height: 24px;
+
+            color: var(--orange);
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .quick-btn span {
+
+            display: block;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+        }
+
+
+        /* =====================================
+           RESPONSIVE
+        ===================================== */
+
+        @media (max-width: 1200px) {
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+        }
+
+
+        @media (max-width: 950px) {
+
+            .sidebar {
+
+                width: 210px;
+
+            }
+
+            .main {
+
+                margin-left: 210px;
+
+                width:
+                    calc(100% - 210px);
+
+            }
+
+            .dashboard-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+
+                width: 70px;
+
+                padding:
+                    15px 8px;
+
+            }
+
+
+            .brand {
+
+                justify-content: center;
+
+                padding:
+                    5px
+                    0
+                    20px;
+
+            }
+
+
+            .brand-text,
+            .menu-title {
+
+                display: none;
+
+            }
+
+
+            .menu-item {
+
+                justify-content: center;
+
+                padding: 13px 8px;
+
+            }
+
+
+            .main {
+
+                margin-left: 70px;
+
+                width:
+                    calc(100% - 70px);
+
+            }
+
+
+            .content {
+
+                padding:
+                    20px 15px;
+
+            }
+
+
+            .header {
+
+                padding:
+                    0
+                    15px;
+
+            }
+
+
+            .manager-info {
+
+                display: none;
+
+            }
+
+
+            .stats {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .quick-actions {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+
+            .order-table {
+
+                min-width: 650px;
+
+            }
+
+
+            .card {
+
+                overflow-x: auto;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="dashboard">
+
+
+    <!-- =====================================
+         SIDEBAR
+    ====================================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="brand">
+
+            <img
+                src="logo.png"
+                alt="Coffee House"
+            >
+
+            <div class="brand-text">
+
+                <h2>Coffee House</h2>
+
+                <span>QUẢN LÝ BÁN HÀNG</span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="menu">
+
+
+            <div class="menu-title">
+                Tổng quan
+            </div>
+
+
+            <a
+                href="tongquan_quanly.html"
+                class="menu-item active"
+            >
+
+                <svg
+                    class="menu-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                >
+
+                    <rect
+                        x="3"
+                        y="3"
+                        width="7"
+                        height="7"
+                        rx="1"
+                    />
+
+                    <rect
+                        x="14"
+                        y="3"
+                        width="7"
+                        height="7"
+                        rx="1"
+                    />
+
+                    <rect
+                        x="3"
+                        y="14"
+                        width="7"
+                        height="7"
+                        rx="1"
+                    />
+
+                    <rect
+                        x="14"
+                        y="14"
+                        width="7"
+                        height="7"
+                        rx="1"
+                    />
+
+                </svg>
+
+                <span>Tổng quan</span>
+
+            </a>
+
+
+            <div class="menu-title">
+                Quản lý
+            </div>
+
+
+            <a href="#" class="menu-item">
+
+                <svg
+                    class="menu-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                >
+
+                    <path
+                        d="M3 3h18v18H3z"
+                    />
+
+                    <path
+                        d="M7 16V10"
+                    />
+
+                    <path
+                        d="M12 16V7"
+                    />
+
+                    <path
+                        d="M17 16v-4"
+                    />
+
+                </svg>
+
+                <span>Doanh thu</span>
+
+            </a>
+
+
+            <a href="#" class="menu-item">
+
+                <svg
+                    class="menu-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                >
+
+                    <path
+                        d="M6 2h12v20H6z"
+                    />
+
+                    <path
+                        d="M9 6h6"
+                    />
+
+                    <path
+                        d="M9 10h6"
+                    />
+
+                    <path
+                        d="M9 14h3"
+                    />
+
+                </svg>
+
+                <span>Đơn hàng</span>
+
+            </a>
+
+
+            <a href="#" class="menu-item">
+
+                <svg
+                    class="menu-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                >
+
+                    <path
+                        d="M4 20V10"
+                    />
+
+                    <path
+                        d="M10 20V4"
+                    />
+
+                    <path
+                        d="M16 20v-7"
+                    />
+
+                    <path
+                        d="M22 20V7"
+                    />
+
+                </svg>
+
+                <span>Hàng hóa</span>
+
+            </a>
+
+
+            <a href="#" class="menu-item">
+
+                <svg
+                    class="menu-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                >
+
+                    <circle
+                        cx="9"
+                        cy="7"
+                        r="4"
+                    />
+
+                    <path
+                        d="M2 21c0-4 3-7 7-7s7 3 7 7"
+                    />
+
+                    <path
+                        d="M19 8v6"
+                    />
+
+                    <path
+                        d="M16 11h6"
+                    />
+
+                </svg>
+
+                <span>Khách hàng</span>
+
+            </a>
+
+
+            <a href="#" class="menu-item">
+
+                <svg
+                    class="menu-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                >
+
+                    <path
+                        d="M4 4h16v16H4z"
+                    />
+
+                    <path
+                        d="M8 8h8"
+                    />
+
+                    <path
+                        d="M8 12h8"
+                    />
+
+                    <path
+                        d="M8 16h5"
+                    />
+
+                </svg>
+
+                <span>Nhân viên</span>
+
+            </a>
+
+
+            <div class="menu-title">
+                Hệ thống
+            </div>
+
+
+            <a href="#" class="menu-item">
+
+                <svg
+                    class="menu-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                >
+
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="3"
+                    />
+
+                    <path
+                        d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2 2-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V22h-3v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1-2-2 .1-.1A1.7 1.7 0 0 0 7.2 16a1.7 1.7 0 0 0-1.6-1H5v-3h.2a1.7 1.7 0 0 0 1.6-1A1.7 1.7 0 0 0 6.5 9l-.1-.1 2-2 .1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6V5h3v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 2 2-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1H21v3h-.2a1.7 1.7 0 0 0-1.4.6z"
+                    />
+
+                </svg>
+
+                <span>Cài đặt</span>
+
+            </a>
+
+
+            <a
+                href="index.html"
+                class="menu-item"
+            >
+
+                <svg
+                    class="menu-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                >
+
+                    <path
+                        d="M10 17l5-5-5-5"
+                    />
+
+                    <path
+                        d="M15 12H3"
+                    />
+
+                    <path
+                        d="M21 3v18"
+                    />
+
+                </svg>
+
+                <span>Đăng xuất</span>
+
+            </a>
+
+
+        </nav>
+
+    </aside>
+
+
+
+    <!-- =====================================
+         MAIN
+    ====================================== -->
+
+    <main class="main">
+
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+
+            <div class="header-left">
+
+                <h1>Tổng quan</h1>
+
+                <p>
+                    Quản lý và theo dõi hoạt động kinh doanh
+                </p>
+
+            </div>
+
+
+            <div class="header-right">
+
+
+                <div class="notification">
+
+                    <span class="notification-badge"></span>
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                    >
+
+                        <path
+                            d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"
+                        />
+
+                        <path
+                            d="M10 21h4"
+                        />
+
+                    </svg>
+
+                </div>
+
+
+                <div class="manager">
+
+                    <div class="manager-avatar">
+                        QL
+                    </div>
+
+                    <div class="manager-info">
+
+                        <strong>
+                            Quản lý
+                        </strong>
+
+                        <span>
+                            Quản lý cửa hàng
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </header>
+
+
+
+        <!-- CONTENT -->
+
+        <section class="content">
+
+
+            <!-- WELCOME -->
+
+            <div class="welcome">
+
+                <div>
+
+                    <h2>
+                        Xin chào, Quản lý! 👋
+                    </h2>
+
+                    <p>
+                        Đây là tình hình hoạt động của Coffee House hôm nay.
+                    </p>
+
+                </div>
+
+
+                <div class="date-box">
+
+                    📅
+                    <span id="currentDate">
+                        Hôm nay
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 STATISTICS
+            ================================== -->
+
+            <div class="stats">
+
+
+                <!-- DOANH THU -->
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+
+                                <path
+                                    d="M12 2v20"
+                                />
+
+                                <path
+                                    d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H7"
+                                />
+
+                            </svg>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-label">
+                        Doanh thu hôm nay
+                    </div>
+
+                    <div class="stat-number">
+                        12.580.000đ
+                    </div>
+
+                    <div class="stat-change increase">
+                        ↑ 12,5% so với hôm qua
+                    </div>
+
+                </div>
+
+
+
+                <!-- ĐƠN HÀNG -->
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+
+                                <path
+                                    d="M6 2h12v20H6z"
+                                />
+
+                                <path
+                                    d="M9 6h6"
+                                />
+
+                                <path
+                                    d="M9 10h6"
+                                />
+
+                                <path
+                                    d="M9 14h4"
+                                />
+
+                            </svg>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-label">
+                        Đơn hàng hôm nay
+                    </div>
+
+                    <div class="stat-number">
+                        186
+                    </div>
+
+                    <div class="stat-change increase">
+                        ↑ 8,2% so với hôm qua
+                    </div>
+
+                </div>
+
+
+
+                <!-- KHÁCH -->
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+
+                                <circle
+                                    cx="9"
+                                    cy="7"
+                                    r="4"
+                                />
+
+                                <path
+                                    d="M2 21c0-4 3-7 7-7s7 3 7 7"
+                                />
+
+                            </svg>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-label">
+                        Khách hàng
+                    </div>
+
+                    <div class="stat-number">
+                        1.248
+                    </div>
+
+                    <div class="stat-change increase">
+                        ↑ 5,4% tháng này
+                    </div>
+
+                </div>
+
+
+
+                <!-- SẢN PHẨM -->
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+
+                                <path
+                                    d="M4 4h16v16H4z"
+                                />
+
+                                <path
+                                    d="M8 8h8"
+                                />
+
+                                <path
+                                    d="M8 12h8"
+                                />
+
+                                <path
+                                    d="M8 16h5"
+                                />
+
+                            </svg>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-label">
+                        Sản phẩm
+                    </div>
+
+                    <div class="stat-number">
+                        86
+                    </div>
+
+                    <div class="stat-change decrease">
+                        ↓ 2 sản phẩm sắp hết
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 CHART + BEST SELLING
+            ================================== -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- DOANH THU -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h3>
+                            Doanh thu 7 ngày gần nhất
+                        </h3>
+
+                        <a
+                            href="#"
+                            class="view-all"
+                        >
+                            Xem báo cáo
+                        </a>
+
+                    </div>
+
+
+                    <div class="chart">
+
+
+                        <div class="bar-item">
+
+                            <div
+                                class="bar"
+                                style="height:45%;"
+                            ></div>
+
+                            <span class="bar-label">
+                                T2
+                            </span>
+
+                        </div>
+
+
+                        <div class="bar-item">
+
+                            <div
+                                class="bar"
+                                style="height:65%;"
+                            ></div>
+
+                            <span class="bar-label">
+                                T3
+                            </span>
+
+                        </div>
+
+
+                        <div class="bar-item">
+
+                            <div
+                                class="bar"
+                                style="height:55%;"
+                            ></div>
+
+                            <span class="bar-label">
+                                T4
+                            </span>
+
+                        </div>
+
+
+                        <div class="bar-item">
+
+                            <div
+                                class="bar"
+                                style="height:78%;"
+                            ></div>
+
+                            <span class="bar-label">
+                                T5
+                            </span>
+
+                        </div>
+
+
+                        <div class="bar-item">
+
+                            <div
+                                class="bar"
+                                style="height:68%;"
+                            ></div>
+
+                            <span class="bar-label">
+                                T6
+                            </span>
+
+                        </div>
+
+
+                        <div class="bar-item">
+
+                            <div
+                                class="bar"
+                                style="height:92%;"
+                            ></div>
+
+                            <span class="bar-label">
+                                T7
+                            </span>
+
+                        </div>
+
+
+                        <div class="bar-item">
+
+                            <div
+                                class="bar"
+                                style="height:82%;"
+                            ></div>
+
+                            <span class="bar-label">
+                                CN
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- BÁN CHẠY -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h3>
+                            Sản phẩm bán chạy
+                        </h3>
+
+                        <a
+                            href="#"
+                            class="view-all"
+                        >
+                            Xem tất cả
+                        </a>
+
+                    </div>
+
+
+                    <div class="product">
+
+                        <div class="product-image">
+                            ☕
+                        </div>
+
+                        <div class="product-info">
+
+                            <strong>
+                                Cà phê sữa đá
+                            </strong>
+
+                            <span>
+                                Đã bán 86 ly
+                            </span>
+
+                        </div>
+
+                        <div class="product-price">
+                            30.000đ
+                        </div>
+
+                    </div>
+
+
+                    <div class="product">
+
+                        <div class="product-image">
+                            🥤
+                        </div>
+
+                        <div class="product-info">
+
+                            <strong>
+                                Bạc xỉu đá
+                            </strong>
+
+                            <span>
+                                Đã bán 72 ly
+                            </span>
+
+                        </div>
+
+                        <div class="product-price">
+                            35.000đ
+                        </div>
+
+                    </div>
+
+
+                    <div class="product">
+
+                        <div class="product-image">
+                            ☕
+                        </div>
+
+                        <div class="product-info">
+
+                            <strong>
+                                Cappuccino
+                            </strong>
+
+                            <span>
+                                Đã bán 64 ly
+                            </span>
+
+                        </div>
+
+                        <div class="product-price">
+                            45.000đ
+                        </div>
+
+                    </div>
+
+
+                    <div class="product">
+
+                        <div class="product-image">
+                            🥥
+                        </div>
+
+                        <div class="product-info">
+
+                            <strong>
+                                Cà phê cốt dừa
+                            </strong>
+
+                            <span>
+                                Đã bán 58 ly
+                            </span>
+
+                        </div>
+
+                        <div class="product-price">
+                            40.000đ
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 ĐƠN HÀNG
+            ================================== -->
+
+            <div class="card"
+                 style="margin-bottom:20px;">
+
+                <div class="card-header">
+
+                    <h3>
+                        Đơn hàng gần đây
+                    </h3>
+
+                    <a
+                        href="#"
+                        class="view-all"
+                    >
+                        Xem tất cả
+                    </a>
+
+                </div>
+
+
+                <table class="order-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Mã đơn
+                            </th>
+
+                            <th>
+                                Khách hàng
+                            </th>
+
+                            <th>
+                                Thời gian
+                            </th>
+
+                            <th>
+                                Tổng tiền
+                            </th>
+
+                            <th>
+                                Trạng thái
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td class="order-code">
+                                #DH00186
+                            </td>
+
+                            <td>
+                                Nguyễn Minh Anh
+                            </td>
+
+                            <td>
+                                18:35
+                            </td>
+
+                            <td>
+                                185.000đ
+                            </td>
+
+                            <td>
+                                <span class="status success">
+                                    Hoàn thành
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td class="order-code">
+                                #DH00185
+                            </td>
+
+                            <td>
+                                Trần Hoàng Nam
+                            </td>
+
+                            <td>
+                                18:21
+                            </td>
+
+                            <td>
+                                95.000đ
+                            </td>
+
+                            <td>
+                                <span class="status pending">
+                                    Đang xử lý
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td class="order-code">
+                                #DH00184
+                            </td>
+
+                            <td>
+                                Lê Thu Hà
+                            </td>
+
+                            <td>
+                                18:05
+                            </td>
+
+                            <td>
+                                145.000đ
+                            </td>
+
+                            <td>
+                                <span class="status success">
+                                    Hoàn thành
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td class="order-code">
+                                #DH00183
+                            </td>
+
+                            <td>
+                                Phạm Đức Anh
+                            </td>
+
+                            <td>
+                                17:48
+                            </td>
+
+                            <td>
+                                70.000đ
+                            </td>
+
+                            <td>
+                                <span class="status cancel">
+                                    Đã hủy
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+
+            <!-- =================================
+                 THAO TÁC NHANH
+            ================================== -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>
+                        Thao tác nhanh
+                    </h3>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+
+                    <a
+                        href="#"
+                        class="quick-btn"
+                    >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+
+                            <path
+                                d="M12 5v14"
+                            />
+
+                            <path
+                                d="M5 12h14"
+                            />
+
+                        </svg>
+
+                        <span>
+                            Thêm sản phẩm
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="#"
+                        class="quick-btn"
+                    >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+
+                            <circle
+                                cx="9"
+                                cy="7"
+                                r="4"
+                            />
+
+                            <path
+                                d="M2 21c0-4 3-7 7-7"
+                            />
+
+                            <path
+                                d="M19 8v6"
+                            />
+
+                            <path
+                                d="M16 11h6"
+                            />
+
+                        </svg>
+
+                        <span>
+                            Thêm nhân viên
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="#"
+                        class="quick-btn"
+                    >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+
+                            <path
+                                d="M4 4h16v16H4z"
+                            />
+
+                            <path
+                                d="M8 8h8"
+                            />
+
+                            <path
+                                d="M8 12h8"
+                            />
+
+                        </svg>
+
+                        <span>
+                            Nhập hàng
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="#"
+                        class="quick-btn"
+                    >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+
+                            <path
+                                d="M3 3h18v18H3z"
+                            />
+
+                            <path
+                                d="M7 16l3-4 3 2 4-6"
+                            />
+
+                        </svg>
+
+                        <span>
+                            Xem báo cáo
+                        </span>
+
+                    </a>
+
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<script>
+
+
+    /* =====================================
+       HIỂN THỊ NGÀY HIỆN TẠI
+    ===================================== */
+
+    const dateElement =
+        document.getElementById(
+            "currentDate"
+        );
+
+
+    const today =
+        new Date();
+
+
+    const days = [
+        "Chủ nhật",
+        "Thứ hai",
+        "Thứ ba",
+        "Thứ tư",
+        "Thứ năm",
+        "Thứ sáu",
+        "Thứ bảy"
+    ];
+
+
+    const dateText =
+        days[today.getDay()]
+        + ", "
+        + String(
+            today.getDate()
+        ).padStart(2, "0")
+        + "/"
+        + String(
+            today.getMonth() + 1
+        ).padStart(2, "0")
+        + "/"
+        + today.getFullYear();
+
+
+    dateElement.textContent =
+        dateText;
+
+
+</script>
+
+
+</body>
+
+</html>

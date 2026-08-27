@@ -1,0 +1,14 @@
+# Cache & File build của C# .NET
+**/bin/
+**/obj/
+**/staticwebassets.build.json
+**/Properties/launchSettings.json
+
+# Cấu hình IDE & Môi trường
+.vscode/
+.vs/
+*.user
+
+# File cơ sở dữ liệu tạm / Local DB
+*.db
+*.sqlite
