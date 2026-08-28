@@ -30,6 +30,10 @@ namespace CoffeeHouse.API.Controllers
         {
             try
             {
+                // =================================================
+                // KIỂM TRA INPUT
+                // =================================================
+
                 if (request == null)
                 {
                     return BadRequest(new
@@ -111,6 +115,10 @@ namespace CoffeeHouse.API.Controllers
                     });
                 }
 
+                // =================================================
+                // CONNECTION STRING
+                // =================================================
+
                 string? connectionString =
                     _configuration.GetConnectionString("DefaultConnection");
 
@@ -119,7 +127,8 @@ namespace CoffeeHouse.API.Controllers
                     return StatusCode(500, new
                     {
                         success = false,
-                        message = "Không tìm thấy DefaultConnection trong appsettings.json."
+                        message =
+                            "Không tìm thấy DefaultConnection trong appsettings.json."
                     });
                 }
 
@@ -132,10 +141,17 @@ namespace CoffeeHouse.API.Controllers
                 // CHUẨN HÓA DỮ LIỆU
                 // =================================================
 
-                string username = request.Username.Trim();
-                string email = request.Email.Trim();
-                string phone = request.Phone.Trim();
-                string roleCode = request.Role.Trim().ToUpper();
+                string username =
+                    request.Username.Trim();
+
+                string email =
+                    request.Email.Trim();
+
+                string phone =
+                    request.Phone.Trim();
+
+                string roleCode =
+                    request.Role.Trim().ToUpper();
 
                 // =================================================
                 // KIỂM TRA USERNAME
@@ -148,15 +164,17 @@ namespace CoffeeHouse.API.Controllers
                 ";
 
                 using (var cmd =
-                    new MySqlCommand(checkUsernameSql, connection))
+                    new MySqlCommand(
+                        checkUsernameSql,
+                        connection))
                 {
                     cmd.Parameters.AddWithValue(
                         "@username",
-                        username
-                    );
+                        username);
 
                     long count =
-                        Convert.ToInt64(cmd.ExecuteScalar());
+                        Convert.ToInt64(
+                            cmd.ExecuteScalar());
 
                     if (count > 0)
                     {
@@ -179,15 +197,17 @@ namespace CoffeeHouse.API.Controllers
                 ";
 
                 using (var cmd =
-                    new MySqlCommand(checkEmailSql, connection))
+                    new MySqlCommand(
+                        checkEmailSql,
+                        connection))
                 {
                     cmd.Parameters.AddWithValue(
                         "@email",
-                        email
-                    );
+                        email);
 
                     long count =
-                        Convert.ToInt64(cmd.ExecuteScalar());
+                        Convert.ToInt64(
+                            cmd.ExecuteScalar());
 
                     if (count > 0)
                     {
@@ -210,15 +230,17 @@ namespace CoffeeHouse.API.Controllers
                 ";
 
                 using (var cmd =
-                    new MySqlCommand(checkBranchSql, connection))
+                    new MySqlCommand(
+                        checkBranchSql,
+                        connection))
                 {
                     cmd.Parameters.AddWithValue(
                         "@branch_id",
-                        request.BranchId
-                    );
+                        request.BranchId);
 
                     long branchCount =
-                        Convert.ToInt64(cmd.ExecuteScalar());
+                        Convert.ToInt64(
+                            cmd.ExecuteScalar());
 
                     if (branchCount == 0)
                     {
@@ -245,12 +267,13 @@ namespace CoffeeHouse.API.Controllers
                 ";
 
                 using (var cmd =
-                    new MySqlCommand(roleSql, connection))
+                    new MySqlCommand(
+                        roleSql,
+                        connection))
                 {
                     cmd.Parameters.AddWithValue(
                         "@role_code",
-                        roleCode
-                    );
+                        roleCode);
 
                     object? result =
                         cmd.ExecuteScalar();
@@ -270,18 +293,19 @@ namespace CoffeeHouse.API.Controllers
                 }
 
                 // =================================================
-                // CHUYỂN ROLE → POSITION
+                // ROLE → POSITION
                 // =================================================
 
-                string employeePosition = roleCode switch
-                {
-                    "ADMIN" => "Giám đốc",
-                    "MANAGER" => "Quản lý",
-                    "FINANCE" => "Tài chính",
-                    "POS_STAFF" => "Thu ngân",
-                    "BARISTA" => "Pha chế",
-                    _ => "Nhân viên"
-                };
+                string employeePosition =
+                    roleCode switch
+                    {
+                        "ADMIN" => "Giám đốc",
+                        "MANAGER" => "Quản lý",
+                        "FINANCE" => "Tài chính",
+                        "POS_STAFF" => "Thu ngân",
+                        "BARISTA" => "Pha chế",
+                        _ => "Nhân viên"
+                    };
 
                 // =================================================
                 // TRANSACTION
@@ -331,33 +355,27 @@ namespace CoffeeHouse.API.Controllers
                     {
                         cmd.Parameters.AddWithValue(
                             "@branch_id",
-                            request.BranchId
-                        );
+                            request.BranchId);
 
                         cmd.Parameters.AddWithValue(
                             "@full_name",
-                            request.FullName.Trim()
-                        );
+                            request.FullName.Trim());
 
                         cmd.Parameters.AddWithValue(
                             "@phone",
-                            phone
-                        );
+                            phone);
 
                         cmd.Parameters.AddWithValue(
                             "@email",
-                            email
-                        );
+                            email);
 
                         cmd.Parameters.AddWithValue(
                             "@position",
-                            employeePosition
-                        );
+                            employeePosition);
 
                         employeeId =
                             Convert.ToInt64(
-                                cmd.ExecuteScalar()
-                            );
+                                cmd.ExecuteScalar());
                     }
 
                     // =================================================
@@ -400,28 +418,23 @@ namespace CoffeeHouse.API.Controllers
                     {
                         cmd.Parameters.AddWithValue(
                             "@employee_id",
-                            employeeId
-                        );
+                            employeeId);
 
                         cmd.Parameters.AddWithValue(
                             "@role_id",
-                            roleId
-                        );
+                            roleId);
 
                         cmd.Parameters.AddWithValue(
                             "@username",
-                            username
-                        );
+                            username);
 
                         cmd.Parameters.AddWithValue(
                             "@password_hash",
-                            passwordHash
-                        );
+                            passwordHash);
 
                         cmd.Parameters.AddWithValue(
                             "@email",
-                            email
-                        );
+                            email);
 
                         cmd.ExecuteNonQuery();
                     }
@@ -429,13 +442,14 @@ namespace CoffeeHouse.API.Controllers
                     transaction.Commit();
 
                     // =================================================
-                    // TRẢ KẾT QUẢ
+                    // RESPONSE
                     // =================================================
 
                     return Ok(new
                     {
                         success = true,
-                        message = "Đăng ký tài khoản thành công.",
+                        message =
+                            "Đăng ký tài khoản thành công.",
                         employeeId = employeeId,
                         username = username,
                         role = roleCode
@@ -468,6 +482,7 @@ namespace CoffeeHouse.API.Controllers
             }
         }
 
+
         // =========================================================
         // LOGIN
         // POST: /api/Auth/login
@@ -487,7 +502,8 @@ namespace CoffeeHouse.API.Controllers
                     return BadRequest(new
                     {
                         success = false,
-                        message = "Dữ liệu đăng nhập không hợp lệ."
+                        message =
+                            "Dữ liệu đăng nhập không hợp lệ."
                     });
                 }
 
@@ -496,7 +512,8 @@ namespace CoffeeHouse.API.Controllers
                     return BadRequest(new
                     {
                         success = false,
-                        message = "Vui lòng nhập tên đăng nhập."
+                        message =
+                            "Vui lòng nhập tên đăng nhập."
                     });
                 }
 
@@ -505,7 +522,8 @@ namespace CoffeeHouse.API.Controllers
                     return BadRequest(new
                     {
                         success = false,
-                        message = "Vui lòng nhập mật khẩu."
+                        message =
+                            "Vui lòng nhập mật khẩu."
                     });
                 }
 
@@ -515,8 +533,7 @@ namespace CoffeeHouse.API.Controllers
 
                 string? connectionString =
                     _configuration.GetConnectionString(
-                        "DefaultConnection"
-                    );
+                        "DefaultConnection");
 
                 if (string.IsNullOrWhiteSpace(connectionString))
                 {
@@ -535,11 +552,7 @@ namespace CoffeeHouse.API.Controllers
 
                 // =================================================
                 // LOGIN
-                //
-                // Cho phép đăng nhập bằng:
-                // 1. username
-                // 2. email
-                // 3. số điện thoại
+                // USERNAME / EMAIL / PHONE
                 // =================================================
 
                 const string sql = @"
@@ -574,19 +587,17 @@ namespace CoffeeHouse.API.Controllers
                 using var cmd =
                     new MySqlCommand(
                         sql,
-                        connection
-                    );
+                        connection);
 
                 cmd.Parameters.AddWithValue(
                     "@username",
-                    request.Username.Trim()
-                );
+                    request.Username.Trim());
 
                 using var reader =
                     cmd.ExecuteReader();
 
                 // =================================================
-                // KHÔNG TÌM THẤY TÀI KHOẢN
+                // KHÔNG TÌM THẤY
                 // =================================================
 
                 if (!reader.Read())
@@ -610,8 +621,7 @@ namespace CoffeeHouse.API.Controllers
                 bool passwordCorrect =
                     VerifyPassword(
                         request.Password,
-                        storedPasswordHash
-                    );
+                        storedPasswordHash);
 
                 if (!passwordCorrect)
                 {
@@ -649,15 +659,13 @@ namespace CoffeeHouse.API.Controllers
 
                 long userId =
                     Convert.ToInt64(
-                        reader["user_id"]
-                    );
+                        reader["user_id"]);
 
                 long? employeeId =
                     reader["employee_id"] == DBNull.Value
                         ? null
                         : Convert.ToInt64(
-                            reader["employee_id"]
-                        );
+                            reader["employee_id"]);
 
                 string username =
                     reader["username"]?.ToString()
@@ -687,14 +695,14 @@ namespace CoffeeHouse.API.Controllers
                     reader["branch_id"] == DBNull.Value
                         ? null
                         : Convert.ToInt64(
-                            reader["branch_id"]
-                        );
+                            reader["branch_id"]);
 
                 // =================================================
                 // KIỂM TRA ROLE
                 // =================================================
 
-                role = role.Trim().ToUpper();
+                role =
+                    role.Trim().ToUpper();
 
                 if (string.IsNullOrWhiteSpace(role))
                 {
@@ -707,7 +715,7 @@ namespace CoffeeHouse.API.Controllers
                 }
 
                 // =================================================
-                // TẠO JWT
+                // JWT
                 // =================================================
 
                 string token =
@@ -715,17 +723,17 @@ namespace CoffeeHouse.API.Controllers
                         userId,
                         username,
                         role,
-                        employeeId
-                    );
+                        employeeId);
 
                 // =================================================
-                // TRẢ RESPONSE
+                // RESPONSE
                 // =================================================
 
                 return Ok(new
                 {
                     success = true,
-                    message = "Đăng nhập thành công.",
+                    message =
+                        "Đăng nhập thành công.",
 
                     token = token,
 
@@ -764,11 +772,246 @@ namespace CoffeeHouse.API.Controllers
             }
         }
 
+
+        // =========================================================
+        // CHANGE PASSWORD
+        // POST: /api/Auth/change-password
+        // =========================================================
+
+        [HttpPost("change-password")]
+        public IActionResult ChangePassword(
+            [FromBody] ChangePasswordRequest request)
+        {
+            try
+            {
+                // =================================================
+                // KIỂM TRA REQUEST
+                // =================================================
+
+                if (request == null)
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message =
+                            "Dữ liệu yêu cầu không hợp lệ."
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(
+                    request.Username))
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message =
+                            "Username không được để trống."
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(
+                    request.NewPassword))
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message =
+                            "Mật khẩu mới không được để trống."
+                    });
+                }
+
+                if (request.NewPassword.Length < 6)
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message =
+                            "Mật khẩu mới phải có ít nhất 6 ký tự."
+                    });
+                }
+
+                // =================================================
+                // CONNECTION STRING
+                // =================================================
+
+                string? connectionString =
+                    _configuration.GetConnectionString(
+                        "DefaultConnection");
+
+                if (string.IsNullOrWhiteSpace(
+                    connectionString))
+                {
+                    return StatusCode(500, new
+                    {
+                        success = false,
+                        message =
+                            "Không tìm thấy DefaultConnection trong appsettings.json."
+                    });
+                }
+
+                using var connection =
+                    new MySqlConnection(
+                        connectionString);
+
+                connection.Open();
+
+                // =================================================
+                // TÌM USER
+                // =================================================
+
+                const string selectSql = @"
+                    SELECT
+                        user_id,
+                        status
+                    FROM `user`
+                    WHERE username = @username
+                    LIMIT 1;
+                ";
+
+                long userId;
+                string status;
+
+                using (var cmd =
+                    new MySqlCommand(
+                        selectSql,
+                        connection))
+                {
+                    cmd.Parameters.AddWithValue(
+                        "@username",
+                        request.Username.Trim());
+
+                    using var reader =
+                        cmd.ExecuteReader();
+
+                    if (!reader.Read())
+                    {
+                        return NotFound(new
+                        {
+                            success = false,
+                            message =
+                                "Không tìm thấy tài khoản."
+                        });
+                    }
+
+                    userId =
+                        Convert.ToInt64(
+                            reader["user_id"]);
+
+                    status =
+                        reader["status"]?.ToString()
+                        ?? "";
+                }
+
+                // =================================================
+                // KIỂM TRA STATUS
+                // =================================================
+
+                if (!status.Equals(
+                        "ACTIVE",
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message =
+                            "Tài khoản không ở trạng thái ACTIVE."
+                    });
+                }
+
+                // =================================================
+                // HASH PASSWORD MỚI
+                // =================================================
+
+                string newPasswordHash =
+                    HashPassword(
+                        request.NewPassword);
+
+                // =================================================
+                // UPDATE PASSWORD
+                // =================================================
+
+                const string updateSql = @"
+                    UPDATE `user`
+                    SET
+                        password_hash = @password_hash,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE user_id = @user_id;
+                ";
+
+                int affectedRows;
+
+                using (var cmd =
+                    new MySqlCommand(
+                        updateSql,
+                        connection))
+                {
+                    cmd.Parameters.AddWithValue(
+                        "@password_hash",
+                        newPasswordHash);
+
+                    cmd.Parameters.AddWithValue(
+                        "@user_id",
+                        userId);
+
+                    affectedRows =
+                        cmd.ExecuteNonQuery();
+                }
+
+                // =================================================
+                // KIỂM TRA UPDATE
+                // =================================================
+
+                if (affectedRows == 0)
+                {
+                    return StatusCode(500, new
+                    {
+                        success = false,
+                        message =
+                            "Không thể cập nhật mật khẩu."
+                    });
+                }
+
+                // =================================================
+                // SUCCESS
+                // =================================================
+
+                return Ok(new
+                {
+                    success = true,
+                    message =
+                        "Đổi mật khẩu thành công.",
+                    username =
+                        request.Username.Trim()
+                });
+            }
+            catch (MySqlException ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Lỗi MySQL.",
+                    detail = ex.Message,
+                    errorCode = ex.Number
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Lỗi hệ thống.",
+                    detail = ex.Message
+                });
+            }
+        }
+
+
         // =========================================================
         // HASH PASSWORD
         // =========================================================
 
-        private static string HashPassword(string password)
+        private static string HashPassword(
+            string password)
         {
             byte[] salt =
                 RandomNumberGenerator.GetBytes(16);
@@ -788,6 +1031,7 @@ namespace CoffeeHouse.API.Controllers
                 + Convert.ToBase64String(hash);
         }
 
+
         // =========================================================
         // VERIFY PASSWORD
         // =========================================================
@@ -798,7 +1042,8 @@ namespace CoffeeHouse.API.Controllers
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(storedHash))
+                if (string.IsNullOrWhiteSpace(
+                    storedHash))
                 {
                     return false;
                 }
@@ -813,13 +1058,11 @@ namespace CoffeeHouse.API.Controllers
 
                 byte[] salt =
                     Convert.FromBase64String(
-                        parts[0]
-                    );
+                        parts[0]);
 
                 byte[] expectedHash =
                     Convert.FromBase64String(
-                        parts[1]
-                    );
+                        parts[1]);
 
                 byte[] actualHash =
                     Rfc2898DeriveBytes.Pbkdf2(
@@ -833,14 +1076,14 @@ namespace CoffeeHouse.API.Controllers
                 return
                     CryptographicOperations.FixedTimeEquals(
                         actualHash,
-                        expectedHash
-                    );
+                        expectedHash);
             }
             catch
             {
                 return false;
             }
         }
+
 
         // =========================================================
         // GENERATE JWT
@@ -921,5 +1164,19 @@ namespace CoffeeHouse.API.Controllers
             return new JwtSecurityTokenHandler()
                 .WriteToken(token);
         }
+    }
+
+
+    // =============================================================
+    // CHANGE PASSWORD REQUEST
+    // =============================================================
+
+    public class ChangePasswordRequest
+    {
+        public string Username { get; set; }
+            = string.Empty;
+
+        public string NewPassword { get; set; }
+            = string.Empty;
     }
 }

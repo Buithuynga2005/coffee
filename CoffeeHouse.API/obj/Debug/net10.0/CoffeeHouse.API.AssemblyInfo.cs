@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CoffeeHouse.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da7f856592ceba8036abfe275d484e31cb5b2545")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5c26c04585755ac320da0d174967c18350405014")]
 [assembly: System.Reflection.AssemblyProductAttribute("CoffeeHouse.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CoffeeHouse.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

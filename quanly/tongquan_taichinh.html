@@ -1,0 +1,2289 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tài chính | Coffee House</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --brown-dark: #4b2917;
+            --brown: #633719;
+            --orange: #d86f0b;
+            --orange-dark: #bd5b08;
+            --cream: #f7f1eb;
+            --border: #eadfd5;
+            --text: #3b281d;
+            --muted: #8b786b;
+            --white: #ffffff;
+            --green: #269b72;
+            --red: #d94a3d;
+            --yellow: #d99522;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* =========================================
+           LAYOUT
+        ========================================= */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================================
+           SIDEBAR
+        ========================================= */
+
+        .sidebar {
+            width: 282px;
+            min-height: 100vh;
+            background: linear-gradient(
+                180deg,
+                #512b18 0%,
+                #3f2113 100%
+            );
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            padding: 22px 18px;
+            z-index: 100;
+        }
+
+        .brand {
+            height: 78px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 0 10px 20px;
+            border-bottom: 1px solid rgba(255,255,255,.12);
+        }
+
+        .brand-logo {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: #fff8ef;
+            border: 2px solid #efd2b3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .brand-logo img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+        }
+
+        .brand-name {
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .brand-subtitle {
+            margin-top: 4px;
+            font-size: 12px;
+            color: #dfc8b7;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
+
+        .menu-title {
+            margin: 25px 4px 10px;
+            color: #cdb5a5;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .menu-item {
+            width: 100%;
+            min-height: 52px;
+            padding: 0 13px;
+            border-radius: 11px;
+            color: #f6e9df;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 15px;
+            transition: .2s;
+        }
+
+        .menu-item:hover {
+            background: rgba(216,111,11,.18);
+        }
+
+        .menu-item.active {
+            background: linear-gradient(
+                135deg,
+                #d9760c,
+                #c55d08
+            );
+            color: white;
+            box-shadow:
+                0 8px 18px rgba(0,0,0,.13);
+        }
+
+        .menu-icon {
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f3e5d9;
+            flex-shrink: 0;
+        }
+
+        .menu-icon svg {
+            width: 21px;
+            height: 21px;
+        }
+
+        .menu-item.active .menu-icon {
+            color: white;
+        }
+
+        .logout {
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            bottom: 20px;
+        }
+
+        /* =========================================
+           MAIN
+        ========================================= */
+
+        .main {
+            margin-left: 282px;
+            width: calc(100% - 282px);
+            min-height: 100vh;
+        }
+
+        /* =========================================
+           HEADER
+        ========================================= */
+
+        .header {
+            height: 90px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 38px;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            color: #3d2518;
+            font-weight: 800;
+        }
+
+        .header-title p {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification {
+            width: 46px;
+            height: 46px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #68452e;
+            position: relative;
+        }
+
+        .notification .dot {
+            position: absolute;
+            right: 9px;
+            top: 8px;
+            width: 7px;
+            height: 7px;
+            background: var(--orange);
+            border-radius: 50%;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 47px;
+            height: 47px;
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                #d98435,
+                #b65b18
+            );
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .user-name {
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .user-role {
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* =========================================
+           CONTENT
+        ========================================= */
+
+        .content {
+            padding: 34px 38px 45px;
+        }
+
+        .welcome {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 27px;
+        }
+
+        .welcome h2 {
+            font-size: 27px;
+            color: #4a2918;
+        }
+
+        .welcome p {
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .date-box {
+            padding: 12px 18px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            color: #6d5545;
+            font-size: 14px;
+        }
+
+        /* =========================================
+           STAT CARDS
+        ========================================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            padding: 22px;
+            min-height: 175px;
+        }
+
+        .stat-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-icon {
+            width: 51px;
+            height: 51px;
+            border-radius: 14px;
+            background: #fff2e5;
+            color: var(--orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon svg {
+            width: 25px;
+            height: 25px;
+        }
+
+        .stat-label {
+            margin-top: 17px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .stat-value {
+            margin-top: 7px;
+            font-size: 27px;
+            font-weight: 800;
+            color: #482816;
+        }
+
+        .stat-change {
+            margin-top: 7px;
+            font-size: 13px;
+        }
+
+        .green {
+            color: var(--green);
+        }
+
+        .red {
+            color: var(--red);
+        }
+
+        .yellow {
+            color: var(--yellow);
+        }
+
+        /* =========================================
+           GRID
+        ========================================= */
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr);
+            gap: 22px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 22px 24px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #452717;
+        }
+
+        .card-link {
+            color: var(--orange);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .card-body {
+            padding: 0 24px 24px;
+        }
+
+        /* =========================================
+           CHART
+        ========================================= */
+
+        .chart {
+            height: 265px;
+            display: flex;
+            align-items: flex-end;
+            gap: 16px;
+            padding: 20px 5px 5px;
+            border-bottom: 1px solid #eee4dc;
+        }
+
+        .bar-wrapper {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .bar-value {
+            font-size: 11px;
+            color: #7f6c5d;
+        }
+
+        .bar {
+            width: 48px;
+            max-width: 75%;
+            min-height: 5px;
+            border-radius: 8px 8px 3px 3px;
+            background: linear-gradient(
+                180deg,
+                #df8423,
+                #c55d08
+            );
+        }
+
+        .bar-label {
+            font-size: 12px;
+            color: #8a786b;
+        }
+
+        /* =========================================
+           EXPENSE LIST
+        ========================================= */
+
+        .expense-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee7e1;
+        }
+
+        .expense-item:last-child {
+            border-bottom: none;
+        }
+
+        .expense-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .expense-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 11px;
+            background: #fff3e7;
+            color: var(--orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .expense-name {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .expense-date {
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .expense-money {
+            color: #492918;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        /* =========================================
+           REQUEST TABLE
+        ========================================= */
+
+        .request-card {
+            margin-bottom: 25px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 15px 20px;
+            text-align: left;
+            border-top: 1px solid #eee5de;
+            font-size: 14px;
+        }
+
+        th {
+            color: #806d60;
+            font-size: 12px;
+            text-transform: uppercase;
+            background: #fffaf6;
+        }
+
+        td {
+            color: #4d3627;
+        }
+
+        .request-id {
+            font-weight: 800;
+            color: var(--orange);
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status.pending {
+            background: #fff5dc;
+            color: #a66a00;
+        }
+
+        .status.approved {
+            background: #eaf8f1;
+            color: #25805e;
+        }
+
+        .status.rejected {
+            background: #fff0ee;
+            color: #c64b3d;
+        }
+
+        .status.paid {
+            background: #eeeafd;
+            color: #6952a8;
+        }
+
+        /* =========================================
+           QUICK ACTIONS
+        ========================================= */
+
+        .actions {
+            display: grid;
+            grid-template-columns:
+                repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .action {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: white;
+            padding: 18px;
+            text-decoration: none;
+            color: var(--text);
+            transition: .2s;
+        }
+
+        .action:hover {
+            transform: translateY(-2px);
+            border-color: #e1b58d;
+            box-shadow: 0 8px 20px rgba(76,44,22,.07);
+        }
+
+        .action-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 11px;
+            background: #fff2e5;
+            color: var(--orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .action-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .action-title {
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .action-desc {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* =========================================
+           MODAL
+        ========================================= */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(48, 29, 18, .45);
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            width: min(570px, 100%);
+            background: white;
+            border-radius: 18px;
+            padding: 27px;
+            box-shadow: 0 25px 70px rgba(0,0,0,.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .modal-header h3 {
+            font-size: 21px;
+        }
+
+        .close {
+            width: 35px;
+            height: 35px;
+            border: none;
+            border-radius: 9px;
+            background: #f7eee7;
+            cursor: pointer;
+            color: #684936;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #5a4030;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            border: 1px solid #ddd1c7;
+            border-radius: 9px;
+            padding: 12px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(216,111,11,.08);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 9px;
+            padding: 11px 18px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .btn-cancel {
+            background: #f1e9e3;
+            color: #654b3a;
+        }
+
+        .btn-primary {
+            background: var(--orange);
+            color: white;
+        }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 1200px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 850px) {
+
+            .sidebar {
+                width: 75px;
+                padding: 18px 10px;
+            }
+
+            .brand {
+                justify-content: center;
+                padding: 0 0 20px;
+            }
+
+            .brand-logo {
+                width: 48px;
+                height: 48px;
+            }
+
+            .brand-logo img {
+                width: 37px;
+                height: 37px;
+            }
+
+            .brand-name,
+            .brand-subtitle,
+            .menu-title,
+            .menu-item span:not(.menu-icon) {
+                display: none;
+            }
+
+            .menu-item {
+                justify-content: center;
+                padding: 0;
+            }
+
+            .logout {
+                left: 10px;
+                right: 10px;
+            }
+
+            .main {
+                margin-left: 75px;
+                width: calc(100% - 75px);
+            }
+
+            .header {
+                padding: 0 20px;
+            }
+
+            .content {
+                padding: 25px 20px;
+            }
+
+            .header-title h1 {
+                font-size: 23px;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header {
+                height: auto;
+                padding: 17px;
+            }
+
+            .user-role {
+                display: none;
+            }
+
+            .chart {
+                gap: 7px;
+            }
+
+            .bar {
+                width: 30px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                <img src="logo.png" alt="Coffee House">
+            </div>
+
+            <div>
+                <div class="brand-name">
+                    Coffee House
+                </div>
+
+                <div class="brand-subtitle">
+                    TÀI CHÍNH
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="menu-title">
+            TỔNG QUAN
+        </div>
+
+        <nav class="menu">
+
+            <a
+                href="tongquan_taichinh.html"
+                class="menu-item active"
+            >
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                    </svg>
+                </span>
+
+                <span>Tổng quan</span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="menu-title">
+            TÀI CHÍNH
+        </div>
+
+        <nav class="menu">
+
+            <a href="#" class="menu-item">
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8">
+                        <path d="M12 2v20"/>
+                        <path d="M17 6H9.5a3.5 3.5 0 0 0 0 7H14.5a3.5 3.5 0 0 1 0 7H7"/>
+                    </svg>
+                </span>
+
+                <span>Thu - Chi</span>
+
+            </a>
+
+
+            <a href="#" class="menu-item">
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8">
+                        <path d="M4 4h16v16H4z"/>
+                        <path d="M8 8h8"/>
+                        <path d="M8 12h8"/>
+                        <path d="M8 16h5"/>
+                    </svg>
+                </span>
+
+                <span>Phiếu chi</span>
+
+            </a>
+
+
+            <a href="#" class="menu-item">
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8">
+                        <path d="M4 5h16"/>
+                        <path d="M4 12h16"/>
+                        <path d="M4 19h16"/>
+                        <circle cx="8" cy="5" r="2"/>
+                        <circle cx="15" cy="12" r="2"/>
+                        <circle cx="10" cy="19" r="2"/>
+                    </svg>
+                </span>
+
+                <span>Danh mục chi phí</span>
+
+            </a>
+
+
+            <a href="#" class="menu-item">
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8">
+                        <path d="M3 20V10"/>
+                        <path d="M9 20V4"/>
+                        <path d="M15 20v-7"/>
+                        <path d="M21 20V7"/>
+                    </svg>
+                </span>
+
+                <span>Báo cáo tài chính</span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="menu-title">
+            YÊU CẦU
+        </div>
+
+        <nav class="menu">
+
+            <a href="#" class="menu-item">
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8">
+                        <path d="M4 4h16v16H4z"/>
+                        <path d="M8 8h8"/>
+                        <path d="M8 12h5"/>
+                        <path d="M8 16h7"/>
+                    </svg>
+                </span>
+
+                <span>Yêu cầu chi</span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="menu-title">
+            HỆ THỐNG
+        </div>
+
+        <nav class="menu">
+
+            <a href="#" class="menu-item">
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 1.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-2.5V20a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1-1.8-1.8.1-.1A1.7 1.7 0 0 0 8 15a1.7 1.7 0 0 0-1.6-1H6v-2.5h.4A1.7 1.7 0 0 0 8 10a1.7 1.7 0 0 0-.3-1.9l-.1-.1 1.8-1.8.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6v-.2h2.5V5a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.8 1.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2V14h-.2a1.7 1.7 0 0 0-1.5 1z"/>
+                    </svg>
+                </span>
+
+                <span>Cài đặt</span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="logout">
+
+            <a
+                href="index.html"
+                class="menu-item"
+                onclick="logout()"
+            >
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8">
+                        <path d="M10 17l5-5-5-5"/>
+                        <path d="M15 12H3"/>
+                        <path d="M21 19V5a2 2 0 0 0-2-2h-4"/>
+                    </svg>
+                </span>
+
+                <span>Đăng xuất</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================
+         MAIN
+    ========================================== -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <div class="header-title">
+
+                <h1>
+                    Tổng quan tài chính
+                </h1>
+
+                <p>
+                    Theo dõi và quản lý tình hình tài chính Coffee House
+                </p>
+
+            </div>
+
+
+            <div class="header-right">
+
+                <div class="notification">
+
+                    <span class="dot"></span>
+
+                    <svg
+                        width="22"
+                        height="22"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                    >
+                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+                        <path d="M10 21h4"/>
+                    </svg>
+
+                </div>
+
+
+                <div class="user">
+
+                    <div class="avatar">
+                        TC
+                    </div>
+
+                    <div>
+
+                        <div class="user-name">
+                            Tài chính
+                        </div>
+
+                        <div class="user-role">
+                            Kế toán - Tài chính
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- CONTENT -->
+
+        <section class="content">
+
+            <div class="welcome">
+
+                <div>
+
+                    <h2>
+                        Xin chào, Tài chính! 👋
+                    </h2>
+
+                    <p>
+                        Đây là tình hình tài chính của Coffee House hôm nay.
+                    </p>
+
+                </div>
+
+
+                <div class="date-box">
+
+                    📅
+                    <span id="currentDate">
+                        Thứ sáu, 28/08/2026
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================
+                 STATISTICS
+            ====================================== -->
+
+            <div class="stats">
+
+                <!-- DOANH THU -->
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+
+                            <svg viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.8">
+                                <path d="M12 2v20"/>
+                                <path d="M17 6H9.5a3.5 3.5 0 0 0 0 7H14.5a3.5 3.5 0 0 1 0 7H7"/>
+                            </svg>
+
+                        </div>
+
+                    </div>
+
+                    <div class="stat-label">
+                        Doanh thu hôm nay
+                    </div>
+
+                    <div class="stat-value">
+                        12.580.000đ
+                    </div>
+
+                    <div class="stat-change green">
+                        ↑ 12,5% so với hôm qua
+                    </div>
+
+                </div>
+
+
+                <!-- CHI TIÊU -->
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+
+                            <svg viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.8">
+                                <path d="M4 4h16v16H4z"/>
+                                <path d="M8 8h8"/>
+                                <path d="M8 12h8"/>
+                                <path d="M8 16h5"/>
+                            </svg>
+
+                        </div>
+
+                    </div>
+
+                    <div class="stat-label">
+                        Chi tiêu hôm nay
+                    </div>
+
+                    <div class="stat-value">
+                        4.280.000đ
+                    </div>
+
+                    <div class="stat-change red">
+                        ↑ 5,8% so với hôm qua
+                    </div>
+
+                </div>
+
+
+                <!-- LỢI NHUẬN -->
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+
+                            <svg viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.8">
+                                <path d="M3 20h18"/>
+                                <path d="M5 17l5-5 4 3 6-8"/>
+                                <path d="M16 7h4v4"/>
+                            </svg>
+
+                        </div>
+
+                    </div>
+
+                    <div class="stat-label">
+                        Lợi nhuận tạm tính
+                    </div>
+
+                    <div class="stat-value">
+                        8.300.000đ
+                    </div>
+
+                    <div class="stat-change green">
+                        ↑ 15,2% so với hôm qua
+                    </div>
+
+                </div>
+
+
+                <!-- YÊU CẦU CHỜ -->
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+
+                            <svg viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.8">
+                                <circle cx="12" cy="12" r="9"/>
+                                <path d="M12 7v5l3 2"/>
+                            </svg>
+
+                        </div>
+
+                    </div>
+
+                    <div class="stat-label">
+                        Yêu cầu chi chờ xử lý
+                    </div>
+
+                    <div class="stat-value">
+                        08
+                    </div>
+
+                    <div class="stat-change yellow">
+                        Cần kiểm tra
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================
+                 CHART + EXPENSE
+            ====================================== -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- CHART -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+                            Thu - Chi 7 ngày gần nhất
+                        </div>
+
+                        <a
+                            href="#"
+                            class="card-link"
+                        >
+                            Xem báo cáo
+                        </a>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="chart">
+
+                            <div class="bar-wrapper">
+                                <span class="bar-value">8,2tr</span>
+                                <div class="bar" style="height: 45%;"></div>
+                                <span class="bar-label">T2</span>
+                            </div>
+
+                            <div class="bar-wrapper">
+                                <span class="bar-value">10,4tr</span>
+                                <div class="bar" style="height: 58%;"></div>
+                                <span class="bar-label">T3</span>
+                            </div>
+
+                            <div class="bar-wrapper">
+                                <span class="bar-value">9,8tr</span>
+                                <div class="bar" style="height: 54%;"></div>
+                                <span class="bar-label">T4</span>
+                            </div>
+
+                            <div class="bar-wrapper">
+                                <span class="bar-value">11,6tr</span>
+                                <div class="bar" style="height: 64%;"></div>
+                                <span class="bar-label">T5</span>
+                            </div>
+
+                            <div class="bar-wrapper">
+                                <span class="bar-value">13,2tr</span>
+                                <div class="bar" style="height: 73%;"></div>
+                                <span class="bar-label">T6</span>
+                            </div>
+
+                            <div class="bar-wrapper">
+                                <span class="bar-value">15,1tr</span>
+                                <div class="bar" style="height: 84%;"></div>
+                                <span class="bar-label">T7</span>
+                            </div>
+
+                            <div class="bar-wrapper">
+                                <span class="bar-value">12,6tr</span>
+                                <div class="bar" style="height: 70%;"></div>
+                                <span class="bar-label">CN</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CHI PHÍ GẦN ĐÂY -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+                            Chi phí gần đây
+                        </div>
+
+                        <a href="#" class="card-link">
+                            Xem tất cả
+                        </a>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="expense-item">
+
+                            <div class="expense-left">
+
+                                <div class="expense-icon">
+                                    ☕
+                                </div>
+
+                                <div>
+
+                                    <div class="expense-name">
+                                        Nguyên liệu
+                                    </div>
+
+                                    <div class="expense-date">
+                                        28/08/2026
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="expense-money">
+                                -1.850.000đ
+                            </div>
+
+                        </div>
+
+
+                        <div class="expense-item">
+
+                            <div class="expense-left">
+
+                                <div class="expense-icon">
+                                    ⚡
+                                </div>
+
+                                <div>
+
+                                    <div class="expense-name">
+                                        Điện nước
+                                    </div>
+
+                                    <div class="expense-date">
+                                        28/08/2026
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="expense-money">
+                                -920.000đ
+                            </div>
+
+                        </div>
+
+
+                        <div class="expense-item">
+
+                            <div class="expense-left">
+
+                                <div class="expense-icon">
+                                    🏠
+                                </div>
+
+                                <div>
+
+                                    <div class="expense-name">
+                                        Thuê mặt bằng
+                                    </div>
+
+                                    <div class="expense-date">
+                                        27/08/2026
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="expense-money">
+                                -800.000đ
+                            </div>
+
+                        </div>
+
+
+                        <div class="expense-item">
+
+                            <div class="expense-left">
+
+                                <div class="expense-icon">
+                                    📦
+                                </div>
+
+                                <div>
+
+                                    <div class="expense-name">
+                                        Vận chuyển
+                                    </div>
+
+                                    <div class="expense-date">
+                                        27/08/2026
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="expense-money">
+                                -710.000đ
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================
+                 YÊU CẦU CHI
+            ====================================== -->
+
+            <div class="card request-card">
+
+                <div class="card-header">
+
+                    <div class="card-title">
+                        Yêu cầu chi gần đây
+                    </div>
+
+                    <a href="#" class="card-link">
+                        Xem tất cả
+                    </a>
+
+                </div>
+
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Mã yêu cầu</th>
+                                <th>Nội dung</th>
+                                <th>Chi nhánh</th>
+                                <th>Người yêu cầu</th>
+                                <th>Số tiền</th>
+                                <th>Trạng thái</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <tr>
+
+                                <td class="request-id">
+                                    #REQ-0018
+                                </td>
+
+                                <td>
+                                    Nhập nguyên liệu cà phê
+                                </td>
+
+                                <td>
+                                    Cơ sở Cầu Giấy
+                                </td>
+
+                                <td>
+                                    Quản lý
+                                </td>
+
+                                <td>
+                                    3.500.000đ
+                                </td>
+
+                                <td>
+                                    <span class="status pending">
+                                        Chờ xử lý
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td class="request-id">
+                                    #REQ-0017
+                                </td>
+
+                                <td>
+                                    Mua vật tư quầy pha chế
+                                </td>
+
+                                <td>
+                                    Cơ sở Mỹ Đình
+                                </td>
+
+                                <td>
+                                    Quản lý
+                                </td>
+
+                                <td>
+                                    1.250.000đ
+                                </td>
+
+                                <td>
+                                    <span class="status approved">
+                                        Đã duyệt
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td class="request-id">
+                                    #REQ-0016
+                                </td>
+
+                                <td>
+                                    Bảo trì máy pha cà phê
+                                </td>
+
+                                <td>
+                                    Cơ sở Thanh Xuân
+                                </td>
+
+                                <td>
+                                    Quản lý
+                                </td>
+
+                                <td>
+                                    2.800.000đ
+                                </td>
+
+                                <td>
+                                    <span class="status paid">
+                                        Đã thanh toán
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td class="request-id">
+                                    #REQ-0015
+                                </td>
+
+                                <td>
+                                    Mua dụng cụ vệ sinh
+                                </td>
+
+                                <td>
+                                    Cơ sở Hà Đông
+                                </td>
+
+                                <td>
+                                    Quản lý
+                                </td>
+
+                                <td>
+                                    650.000đ
+                                </td>
+
+                                <td>
+                                    <span class="status rejected">
+                                        Từ chối
+                                    </span>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================
+                 CHỨC NĂNG NHANH
+            ====================================== -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div class="card-title">
+                        Chức năng tài chính
+                    </div>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="actions">
+
+
+                        <a
+                            href="#"
+                            class="action"
+                            onclick="openModal('expense')"
+                        >
+
+                            <div class="action-icon">
+
+                                <svg viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8">
+                                    <path d="M12 5v14"/>
+                                    <path d="M5 12h14"/>
+                                </svg>
+
+                            </div>
+
+                            <div class="action-title">
+                                Tạo phiếu chi
+                            </div>
+
+                            <div class="action-desc">
+                                Tạo phiếu chi cho các khoản thanh toán.
+                            </div>
+
+                        </a>
+
+
+                        <a
+                            href="#"
+                            class="action"
+                            onclick="openModal('request')"
+                        >
+
+                            <div class="action-icon">
+
+                                <svg viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8">
+                                    <path d="M4 4h16v16H4z"/>
+                                    <path d="M8 8h8"/>
+                                    <path d="M8 12h5"/>
+                                    <path d="M8 16h7"/>
+                                </svg>
+
+                            </div>
+
+                            <div class="action-title">
+                                Yêu cầu chi
+                            </div>
+
+                            <div class="action-desc">
+                                Theo dõi các yêu cầu chi từ quản lý.
+                            </div>
+
+                        </a>
+
+
+                        <a
+                            href="#"
+                            class="action"
+                        >
+
+                            <div class="action-icon">
+
+                                <svg viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8">
+                                    <path d="M3 20V10"/>
+                                    <path d="M9 20V4"/>
+                                    <path d="M15 20v-7"/>
+                                    <path d="M21 20V7"/>
+                                </svg>
+
+                            </div>
+
+                            <div class="action-title">
+                                Báo cáo tài chính
+                            </div>
+
+                            <div class="action-desc">
+                                Xem báo cáo thu chi và lợi nhuận.
+                            </div>
+
+                        </a>
+
+
+                        <a
+                            href="#"
+                            class="action"
+                        >
+
+                            <div class="action-icon">
+
+                                <svg viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8">
+                                    <path d="M4 5h16"/>
+                                    <path d="M4 12h16"/>
+                                    <path d="M4 19h16"/>
+                                    <circle cx="8" cy="5" r="2"/>
+                                    <circle cx="15" cy="12" r="2"/>
+                                    <circle cx="10" cy="19" r="2"/>
+                                </svg>
+
+                            </div>
+
+                            <div class="action-title">
+                                Danh mục chi phí
+                            </div>
+
+                            <div class="action-desc">
+                                Quản lý các nhóm chi phí của hệ thống.
+                            </div>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================
+     MODAL TẠO PHIẾU / YÊU CẦU
+========================================== -->
+
+<div
+    class="modal"
+    id="financeModal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h3 id="modalTitle">
+                Tạo phiếu chi
+            </h3>
+
+            <button
+                class="close"
+                onclick="closeModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="financeForm">
+
+            <div class="form-group">
+
+                <label>
+                    Nội dung
+                </label>
+
+                <input
+                    type="text"
+                    id="expenseContent"
+                    placeholder="Nhập nội dung..."
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Danh mục
+                </label>
+
+                <select id="expenseCategory">
+
+                    <option>
+                        Nguyên liệu
+                    </option>
+
+                    <option>
+                        Điện nước
+                    </option>
+
+                    <option>
+                        Thuê mặt bằng
+                    </option>
+
+                    <option>
+                        Vận chuyển
+                    </option>
+
+                    <option>
+                        Bảo trì
+                    </option>
+
+                    <option>
+                        Khác
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Số tiền
+                </label>
+
+                <input
+                    type="number"
+                    id="expenseAmount"
+                    placeholder="Nhập số tiền..."
+                    min="0"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Ghi chú
+                </label>
+
+                <textarea
+                    id="expenseNote"
+                    rows="3"
+                    placeholder="Ghi chú..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-cancel"
+                    onclick="closeModal()"
+                >
+                    Hủy
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Lưu
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =========================================
+       API
+    ========================================= */
+
+    const API_URL =
+        "http://localhost:5097/api";
+
+
+    /* =========================================
+       HIỂN THỊ NGÀY
+    ========================================= */
+
+    function updateDate() {
+
+        const now = new Date();
+
+        const days = [
+            "Chủ nhật",
+            "Thứ hai",
+            "Thứ ba",
+            "Thứ tư",
+            "Thứ năm",
+            "Thứ sáu",
+            "Thứ bảy"
+        ];
+
+        const date =
+            `${days[now.getDay()]}, `
+            + `${String(now.getDate()).padStart(2, "0")}/`
+            + `${String(now.getMonth() + 1).padStart(2, "0")}/`
+            + `${now.getFullYear()}`;
+
+        const element =
+            document.getElementById("currentDate");
+
+        if (element) {
+            element.textContent = date;
+        }
+    }
+
+    updateDate();
+
+
+    /* =========================================
+       MODAL
+    ========================================= */
+
+    let modalType = "expense";
+
+    function openModal(type) {
+
+        modalType = type;
+
+        const modal =
+            document.getElementById("financeModal");
+
+        const title =
+            document.getElementById("modalTitle");
+
+        if (type === "request") {
+
+            title.textContent =
+                "Tạo yêu cầu chi";
+
+        } else {
+
+            title.textContent =
+                "Tạo phiếu chi";
+
+        }
+
+        modal.classList.add("show");
+    }
+
+
+    function closeModal() {
+
+        document
+            .getElementById("financeModal")
+            .classList.remove("show");
+
+    }
+
+
+    document
+        .getElementById("financeModal")
+        .addEventListener(
+            "click",
+            function(event) {
+
+                if (
+                    event.target === this
+                ) {
+
+                    closeModal();
+
+                }
+
+            }
+        );
+
+
+    /* =========================================
+       FORM
+    ========================================= */
+
+    document
+        .getElementById("financeForm")
+        .addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+                const content =
+                    document
+                        .getElementById("expenseContent")
+                        .value
+                        .trim();
+
+                const category =
+                    document
+                        .getElementById("expenseCategory")
+                        .value;
+
+                const amount =
+                    Number(
+                        document
+                            .getElementById("expenseAmount")
+                            .value
+                    );
+
+                const note =
+                    document
+                        .getElementById("expenseNote")
+                        .value
+                        .trim();
+
+
+                if (!content || !amount) {
+
+                    alert(
+                        "Vui lòng nhập đầy đủ thông tin."
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                 * HIỆN TẠI:
+                 * Chưa gọi API vì cần xác định
+                 * chính xác endpoint của bảng
+                 * expense_request / expense_voucher.
+                 *
+                 * Sau khi xác định Controller API,
+                 * chỉ cần thay phần dưới bằng fetch().
+                 */
+
+                console.log(
+                    "Finance data:",
+                    {
+                        type: modalType,
+                        content,
+                        category,
+                        amount,
+                        note
+                    }
+                );
+
+
+                alert(
+                    modalType === "request"
+                        ? "Đã ghi nhận yêu cầu chi."
+                        : "Đã ghi nhận phiếu chi."
+                );
+
+
+                closeModal();
+
+                this.reset();
+
+            }
+        );
+
+
+    /* =========================================
+       ĐĂNG XUẤT
+    ========================================= */
+
+    function logout() {
+
+        localStorage.removeItem(
+            "coffee_token"
+        );
+
+        localStorage.removeItem(
+            "coffee_user"
+        );
+
+        localStorage.removeItem(
+            "coffee_username"
+        );
+
+    }
+
+
+    /* =========================================
+       KIỂM TRA ROLE
+    ========================================= */
+
+    try {
+
+        const user =
+            JSON.parse(
+                localStorage.getItem(
+                    "coffee_user"
+                ) || "null"
+            );
+
+        if (user) {
+
+            const role =
+                String(
+                    user.role || ""
+                )
+                .trim()
+                .toUpperCase();
+
+            console.log(
+                "FINANCE PAGE - ROLE:",
+                role
+            );
+
+            /*
+             * Không cho tài khoản khác
+             * truy cập nhầm trang tài chính.
+             */
+
+            if (
+                role &&
+                role !== "FINANCE"
+            ) {
+
+                console.warn(
+                    "Tài khoản hiện tại không phải FINANCE."
+                );
+
+            }
+
+        }
+
+    }
+    catch(error) {
+
+        console.error(
+            "Không đọc được thông tin user:",
+            error
+        );
+
+    }
+
+</script>
+
+</body>
+</html>
