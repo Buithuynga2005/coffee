@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kho hàng | Coffee House</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --brown: #4b2917; --brown-dark: #321c10; --orange: #c96810; --orange-light: #e58a35; --cream: #f7efe7; --white: #ffffff; --text-main: #3d2a20; --gray: #81746c; --border: #eaded4; --bg-light: #f6f1ed; --cat-active-bg: #f4e8e1; }
+        body { font-family: "Segoe UI", Arial, sans-serif; background-color: var(--white); color: var(--text-main); min-height: 100vh; display: flex; }
+        .sidebar { width: 250px; min-height: 100vh; background: linear-gradient(180deg, var(--brown), var(--brown-dark)); color: white; position: fixed; left: 0; top: 0; bottom: 0; padding: 22px 15px; z-index: 100; overflow-y: auto; display: flex; flex-direction: column; }
+        .brand { display: flex; align-items: center; gap: 12px; padding: 5px 10px 25px; border-bottom: 1px solid rgba(255,255,255,0.12); }
+        .brand-logo-wrap { width: 52px; height: 52px; background: #fff8ef; border-radius: 50%; padding: 8px; display: flex; align-items: center; justify-content: center; }
+        .brand-text h2 { font-size: 18px; font-weight: 800; }
+        .brand-text span { font-size: 11px; color: #d8bca6; }
+        .menu { margin-top: 25px; flex: 1; }
+        .menu-item { display: flex; align-items: center; gap: 13px; width: 100%; padding: 13px 14px; margin-bottom: 5px; border-radius: 10px; color: #eaded6; text-decoration: none; font-size: 14px; transition: 0.2s; cursor: pointer; }
+        .menu-item:hover { background: rgba(255,255,255,0.09); color: white; }
+        .menu-item.active { background: linear-gradient(135deg, #d57218, #b95708); color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.18); }
+        .menu-icon { width: 21px; height: 21px; flex-shrink: 0; }
+        .branch-selector { margin-top: 20px; padding: 15px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .branch-selector span { display: block; font-size: 11px; color: #d8bca6; margin-bottom: 5px; }
+        .branch-selector .dropdown { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: white; }
+        .main { margin-left: 250px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+        .header { height: 78px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 50; }
+        .header-left h1 { font-size: 24px; color: var(--text-main); font-weight: 600; display: flex; align-items: center; gap: 15px;}
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .notification { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border); background: #fffaf6; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: var(--brown); }
+        .notification svg { width: 20px; }
+        .notification-badge { position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; background: var(--orange); border-radius: 50%; }
+        .manager { display: flex; align-items: center; gap: 10px; }
+        .manager-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #d88b4b, #9c4c18); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .manager-info strong { display: block; font-size: 14px; }
+        .manager-info span { font-size: 12px; color: var(--gray); }
+        .content { padding: 30px 32px; display: flex; flex-direction: column; flex: 1; }
+        .toolbar-row { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 20px;}
+        .search-box { display: flex; align-items: center; background: #f0f0f0; border-radius: 6px; padding: 10px 15px; width: 300px; gap: 10px;}
+        .search-box input { border: none; background: transparent; outline: none; font-size: 13px; font-family: inherit; color: var(--text-main); width: 100%;}
+        .search-box svg { width: 16px; height: 16px; color: #888; }
+        .date-box { display: flex; align-items: center; background: var(--white); border: 1px solid #ddd; border-radius: 6px; padding: 9px 15px; font-size: 13px; color: var(--text-main); cursor: pointer; gap: 10px; min-width: 250px; justify-content: space-between;}
+        .date-box .left-icon { display: flex; align-items: center; gap: 10px; }
+        .date-box svg { width: 16px; height: 16px; color: #666; }
+        .table-card { background: var(--white); border-radius: 8px; border: 1px solid var(--border); overflow: hidden; padding-bottom: 10px;}
+        .table-title { padding: 20px 20px; font-size: 15px; font-weight: 600; color: var(--text-main); border-bottom: 1px solid transparent;}
+        table { width: 100%; border-collapse: collapse; text-align: center; }
+        th { background-color: #f5f5f5; color: var(--text-main); font-weight: 600; padding: 15px 12px; font-size: 13px; border-bottom: 1px solid #eee; }
+        td { padding: 16px 12px; font-size: 13px; color: var(--text-main); border-bottom: 1px solid #f0f0f0; }
+        tbody tr:hover { background-color: #fafafa; }
+        .status-tag { display: inline-block; padding: 6px 20px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .status-tot { color: #34d399; background: #f0fdf4; border: 1px solid #bbf7d0; }
+        .status-chuy { color: #d97706; background: #fffbeb; border: 1px solid #fde68a; }
+        .status-canxuly { color: #ef4444; background: #fef2f2; border: 1px solid #fecaca; }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-logo-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--brown)" stroke-width="2" style="width: 100%; height: 100%;"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+        </div>
+        <div class="brand-text">
+            <h2>Coffee House</h2>
+            <span>Quản lý quán cà phê</span>
+        </div>
+    </div>
+    <nav class="menu">
+        <a href="tongquan_giamdoc.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span>Tổng quan</span></a>
+        <a href="donhang.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h12v20H6z"/><path d="M9 6h6"/><path d="M9 10h6"/><path d="M9 14h3"/></svg><span>Đơn hàng</span></a>
+        <a href="sanpham.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg><span>Sản phẩm</span></a>
+        <a href="khohang.html" class="menu-item active"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg><span>Kho hàng</span></a>
+        <a href="khachhang.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Khách hàng</span></a>
+        <a href="nhanvien.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Nhân viên</span></a>
+        <a href="chitieu.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3h8l1 4H7l1-4z"></path><path d="M6 7h12c1.1 0 2 .9 2 2v9c0 2.2-1.8 4-4 4H8c-2.2 0-4-1.8-4-4V9c0-1.1.9-2 2-2z"></path><path d="M12 11v6"></path><path d="M10 14h4"></path></svg><span>Chi tiêu</span></a>
+        <a href="caidat.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg><span>Cài đặt</span></a>
+    </nav>
+    <div class="branch-selector"><span>Chi nhánh hiện tại</span><div class="dropdown">Coffee House - Cầu Giấy <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div></div>
+</aside>
+
+<main class="main">
+    <header class="header">
+        <div class="header-left"><h1 id="pageTitle"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 10px;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>Kho hàng</h1></div>
+        <div class="header-right">
+            <div class="notification" title="Thông báo" onclick="showNotification()"><span class="notification-badge"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></div>
+            <div class="manager"><div class="manager-avatar">GĐ</div><div class="manager-info"><strong>Giám đốc</strong><span>Coffee House - Cầu Giấy</span></div></div>
+        </div>
+    </header>
+
+    <div class="content">
+        <div class="toolbar-row">
+            <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg><input type="text" id="keyword" placeholder="Tìm kiếm mặt hàng" onkeyup="if(event.key==='Enter') fetchInventory()"></div>
+            <div class="date-box" onclick="document.getElementById('dateRange').focus()"><div class="left-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><input type="text" id="dateRange" value="12/07/2026-17/07/2026" style="border:none; outline:none; background:transparent; font-family:inherit; cursor:pointer; width:150px;"></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+        </div>
+
+        <div class="table-card">
+            <div class="table-title">Nhập xuất, tình trạng kho trong từng chi nhánh</div>
+            <table>
+                <thead><tr><th>Chi nhánh</th><th>Nhập kho</th><th>Xuất kho</th><th>Sắp hết</th><th>Hết hàng</th><th>Trạng thái</th></tr></thead>
+                <tbody id="inventory-body"></tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+<script>
+    function showNotification() { alert("🔔 Coffee House - Cầu Giấy\n\nBạn hiện có 1 thông báo mới chưa đọc:\nKho Hà Đông có 7 mặt hàng đã hết."); }
+    function formatVND(value) { return value.toLocaleString('vi-VN') + 'đ'; }
+
+    async function fetchInventory() {
+        const keyword = document.getElementById('keyword').value;
+        const dateRange = document.getElementById('dateRange').value;
+        try {
+            let apiUrl = `http://localhost:5097/api/KhoHangGD?dateRange=${encodeURIComponent(dateRange)}&keyword=${encodeURIComponent(keyword)}`;
+            const response = await fetch(apiUrl); const result = await response.json();
+            if (result.success) {
+                const data = result.data; const tbody = document.getElementById('inventory-body'); tbody.innerHTML = '';
+                if(data.inventoryList.length === 0) { tbody.innerHTML = `<tr><td colspan="6" style="padding: 30px;">Không tìm thấy chi nhánh nào.</td></tr>`; return; }
+                data.inventoryList.forEach(item => {
+                    let statusClass = "status-tot";
+                    if(item.status === "Chú ý") statusClass = "status-chuy";
+                    if(item.status === "Cần xử lý") statusClass = "status-canxuly";
+                    tbody.innerHTML += `<tr><td>${item.branchName}</td><td>${formatVND(item.importValue)}</td><td>${formatVND(item.exportValue)}</td><td>${item.lowStockCount}</td><td>${item.outOfStockCount}</td><td><span class="status-tag ${statusClass}">${item.status}</span></td></tr>`;
+                });
+            }
+        } catch (error) { document.getElementById('inventory-body').innerHTML = `<tr><td colspan="6" style="color:red; padding: 20px;">Lỗi kết nối Server! Vui lòng bật Backend C#.</td></tr>`; }
+    }
+    flatpickr("#dateRange", { mode: "range", dateFormat: "d/m/Y", locale: "vn", onChange: function(selectedDates, dateStr) { if (selectedDates.length === 2) fetchInventory(); } });
+    document.addEventListener("DOMContentLoaded", () => { fetchInventory(); });
+</script>
+</body>
+</html>

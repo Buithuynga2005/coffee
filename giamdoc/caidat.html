@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cài đặt | Coffee House</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --brown: #4b2917; --brown-dark: #321c10; --orange: #c96810;
+            --cream: #f7efe7; --white: #ffffff; --text-main: #3d2a20; --gray: #81746c;
+            --border: #eaded4; --bg-light: #f6f1ed;
+        }
+        body { font-family: "Segoe UI", Arial, sans-serif; background: var(--bg-light); color: var(--text-main); min-height: 100vh; display: flex; }
+        
+        /* SIDEBAR */
+        .sidebar { width: 250px; min-height: 100vh; background: linear-gradient(180deg, var(--brown), var(--brown-dark)); color: white; position: fixed; left: 0; top: 0; bottom: 0; padding: 22px 15px; z-index: 100; overflow-y: auto; display: flex; flex-direction: column; }
+        .brand { display: flex; align-items: center; gap: 12px; padding: 5px 10px 25px; border-bottom: 1px solid rgba(255,255,255,0.12); }
+        .brand-logo-wrap { width: 52px; height: 52px; background: #fff8ef; border-radius: 50%; padding: 8px; display: flex; align-items: center; justify-content: center; }
+        .brand-text h2 { font-size: 18px; font-weight: 800; }
+        .brand-text span { font-size: 11px; color: #d8bca6; }
+        .menu { margin-top: 25px; flex: 1; }
+        .menu-item { display: flex; align-items: center; gap: 13px; width: 100%; padding: 13px 14px; margin-bottom: 5px; border-radius: 10px; color: #eaded6; text-decoration: none; font-size: 14px; transition: 0.2s; cursor: pointer; }
+        .menu-item:hover { background: rgba(255,255,255,0.09); color: white; }
+        .menu-item.active { background: linear-gradient(135deg, #d57218, #b95708); color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.18); }
+        .menu-icon { width: 21px; height: 21px; flex-shrink: 0; }
+        .branch-selector { margin-top: 20px; padding: 15px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        .branch-selector span { display: block; font-size: 11px; color: #d8bca6; margin-bottom: 5px; }
+        .branch-selector .dropdown { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: white; }
+
+        /* MAIN & HEADER */
+        .main { margin-left: 250px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+        .header { height: 78px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 50; }
+        .header-left h1 { font-size: 24px; color: var(--text-main); font-weight: 600; display: flex; align-items: center; gap: 15px;}
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .notification { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border); background: #fffaf6; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: var(--brown); }
+        .notification svg { width: 20px; }
+        .notification-badge { position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; background: var(--orange); border-radius: 50%; }
+        .manager { display: flex; align-items: center; gap: 10px; }
+        .manager-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #d88b4b, #9c4c18); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .manager-info strong { display: block; font-size: 14px; }
+        .manager-info span { font-size: 12px; color: var(--gray); }
+
+        /* CONTENT */
+        .content { padding: 30px 32px; display: flex; flex-direction: column; gap: 20px; flex: 1; }
+        
+        .header-wrapper { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+        .header-icon { width: 48px; height: 48px; background: #fdf5f0; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--brown); }
+        .header-text h2 { font-size: 20px; margin-bottom: 5px; color: var(--text-main); }
+        .header-text p { font-size: 13px; color: var(--gray); }
+
+        .settings-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; align-items: start; }
+        
+        /* CARD TRÁI: FORM ĐIỀN THÔNG TIN */
+        .form-card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid var(--border); }
+        .form-title { font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 25px; }
+        
+        .form-layout { display: grid; grid-template-columns: 200px 1fr; gap: 30px; }
+        
+        .logo-section { display: flex; flex-direction: column; gap: 15px; }
+        .logo-preview { width: 100%; aspect-ratio: 1/1; background: var(--brown); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; border: 1px solid var(--border); }
+        .logo-preview svg { width: 50px; height: 50px; margin-bottom: 10px; opacity: 0.9; }
+        .logo-preview span { font-size: 12px; font-weight: 600; letter-spacing: 1px; }
+        .btn-upload { background: white; border: 1px solid var(--border); color: var(--brown); padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn-upload:hover { background: var(--bg-light); border-color: var(--brown); }
+        .upload-hint { font-size: 11px; color: var(--gray); text-align: center; }
+
+        .fields-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); }
+        .form-group label span { color: #dc2626; }
+        .form-group input, .form-group select { padding: 12px 15px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; color: var(--text-main); outline: none; transition: 0.2s; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--brown); box-shadow: 0 0 0 3px rgba(75, 41, 23, 0.1); }
+        .time-input-wrap { position: relative; }
+        .time-input-wrap svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--gray); width: 16px;}
+        .time-input-wrap input { width: 100%; padding-left: 40px; }
+
+        /* CARD PHẢI: INFO & BUTTON */
+        .right-panel { display: flex; flex-direction: column; gap: 20px; }
+        .info-card { background: #fdfaf7; border-radius: 12px; padding: 25px; border: 1px solid var(--border); }
+        .info-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #d8bca6;}
+        
+        .info-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-size: 13px;}
+        .info-row:last-child { margin-bottom: 0; }
+        .info-label { color: var(--gray); }
+        .info-val { font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 8px;}
+        .copy-icon { cursor: pointer; color: var(--gray); transition: 0.2s; }
+        .copy-icon:hover { color: var(--brown); }
+        
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #10b981; background: #d1fae5; border: 1px solid #a7f3d0; }
+
+        .btn-save { background: var(--brown); color: white; border: none; padding: 15px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; font-family: inherit;}
+        .btn-save:hover { background: var(--brown-dark); box-shadow: 0 4px 12px rgba(75,41,23,0.2); transform: translateY(-1px);}
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-logo-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--brown)" stroke-width="2" style="width: 100%; height: 100%;"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+        </div>
+        <div class="brand-text">
+            <h2>Coffee House</h2>
+            <span>Quản lý quán cà phê</span>
+        </div>
+    </div>
+    
+    <nav class="menu">
+        <a href="tongquan_giamdoc.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span>Tổng quan</span></a>
+        <a href="donhang.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h12v20H6z"/><path d="M9 6h6"/><path d="M9 10h6"/><path d="M9 14h3"/></svg><span>Đơn hàng</span></a>
+        <a href="sanpham.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg><span>Sản phẩm</span></a>
+        <a href="khohang.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg><span>Kho hàng</span></a>
+        <a href="khachhang.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Khách hàng</span></a>
+        <a href="nhanvien.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Nhân viên</span></a>
+        <a href="chitieu.html" class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3h8l1 4H7l1-4z"></path><path d="M6 7h12c1.1 0 2 .9 2 2v9c0 2.2-1.8 4-4 4H8c-2.2 0-4-1.8-4-4V9c0-1.1.9-2 2-2z"></path><path d="M12 11v6"></path><path d="M10 14h4"></path></svg><span>Chi tiêu</span></a>
+        <a href="caidat.html" class="menu-item active"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg><span>Cài đặt</span></a>
+    </nav>
+    <div class="branch-selector"><span>Chi nhánh hiện tại</span><div class="dropdown">Coffee House - Cầu Giấy <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div></div>
+</aside>
+
+<main class="main">
+    <header class="header">
+        <div class="header-left">
+            <h1 id="pageTitle"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 10px;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>Cài đặt</h1>
+        </div>
+        <div class="header-right">
+            <div class="notification" onclick="alert('Không có thông báo mới')"><span class="notification-badge"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></div>
+            <div class="manager"><div class="manager-avatar">GĐ</div><div class="manager-info"><strong>Giám đốc</strong><span>Coffee House - Cầu Giấy</span></div></div>
+        </div>
+    </header>
+
+    <div class="content">
+        <div class="header-wrapper">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            </div>
+            <div class="header-text">
+                <h2>Thông tin cửa hàng</h2>
+                <p>Quản lý thông tin cơ bản của cửa hàng và chi nhánh</p>
+            </div>
+        </div>
+
+        <div class="settings-grid">
+            <!-- BÊN TRÁI: FORM ĐIỀN THÔNG TIN -->
+            <div class="form-card">
+                <div class="form-title">Thông tin cơ bản</div>
+                
+                <div class="form-layout">
+                    <!-- LOGO -->
+                    <div class="logo-section">
+                        <div class="form-group">
+                            <label>Logo cửa hàng</label>
+                            <div class="logo-preview">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+                                <span>COFFEE HOUSE</span>
+                            </div>
+                        </div>
+                        <button class="btn-upload">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            Thay đổi logo
+                        </button>
+                        <div class="upload-hint">Định dạng: JPG, PNG (tối đa 2MB)</div>
+                    </div>
+
+                    <!-- INPUT FIELDS -->
+                    <div class="fields-section">
+                        <div class="form-group">
+                            <label>Tên cửa hàng <span>*</span></label>
+                            <input type="text" id="storeName" value="...">
+                        </div>
+                        <div class="form-group">
+                            <label>Số điện thoại <span>*</span></label>
+                            <input type="text" id="phone" value="...">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Email</label>
+                            <input type="email" id="email" value="...">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Địa chỉ <span>*</span></label>
+                            <input type="text" id="address" value="...">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Website</label>
+                            <input type="text" id="website" value="...">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Giờ mở cửa <span>*</span></label>
+                            <div class="time-input-wrap">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                <input type="time" id="openTime" value="06:30">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Giờ đóng cửa <span>*</span></label>
+                            <div class="time-input-wrap">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                <input type="time" id="closeTime" value="22:30">
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Đơn vị tiền tệ</label>
+                            <select id="currency">
+                                <option value="VND (Việt Nam Đồng)">VND (Việt Nam Đồng)</option>
+                                <option value="USD (Đô la Mỹ)">USD (Đô la Mỹ)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BÊN PHẢI: INFO & ACTION -->
+            <div class="right-panel">
+                <div class="info-card">
+                    <div class="info-title">Thông tin chi nhánh hiện tại</div>
+                    <div class="info-row">
+                        <span class="info-label">Mã chi nhánh:</span>
+                        <span class="info-val"><span id="lbl-branchCode">...</span> <svg class="copy-icon" onclick="copyToClipboard()" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Chi nhánh:</span>
+                        <span class="info-val" id="lbl-branchName">...</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Trạng thái:</span>
+                        <span class="info-val"><span class="status-badge" id="lbl-status">...</span></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Ngày tạo:</span>
+                        <span class="info-val" id="lbl-createdAt">...</span>
+                    </div>
+                </div>
+
+                <button class="btn-save" onclick="saveSettings()">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Lưu thay đổi
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Hàm nạp dữ liệu từ C# API
+    async function fetchSettings() {
+        try {
+            // Mặc định lấy thông tin chi nhánh Cầu Giấy (Mã: CG)
+            let apiUrl = 'http://localhost:5097/api/CaiDatGD/Info?branchCode=CG';
+            const response = await fetch(apiUrl); 
+            const result = await response.json();
+            
+            if (result.success) {
+                const data = result.data;
+                // Đổ vào form
+                document.getElementById('storeName').value = data.storeName;
+                document.getElementById('phone').value = data.phone;
+                document.getElementById('email').value = data.email;
+                document.getElementById('address').value = data.address;
+                document.getElementById('website').value = data.website;
+                document.getElementById('openTime').value = data.openTime;
+                document.getElementById('closeTime').value = data.closeTime;
+                document.getElementById('currency').value = data.currency;
+
+                // Đổ vào thẻ thông tin bên phải
+                document.getElementById('lbl-branchCode').textContent = data.branchCode;
+                document.getElementById('lbl-branchName').textContent = data.branchName;
+                document.getElementById('lbl-status').textContent = data.status;
+                document.getElementById('lbl-createdAt').textContent = data.createdAt;
+            } else {
+                alert(result.message);
+            }
+        } catch (error) { 
+            console.error("Lỗi:", error); 
+        }
+    }
+
+    // Hàm mô phỏng Lưu thay đổi
+    async function saveSettings() {
+        const payload = {
+            storeName: document.getElementById('storeName').value,
+            phone: document.getElementById('phone').value,
+            email: document.getElementById('email').value,
+            address: document.getElementById('address').value,
+            website: document.getElementById('website').value,
+            openTime: document.getElementById('openTime').value,
+            closeTime: document.getElementById('closeTime').value,
+            currency: document.getElementById('currency').value
+        };
+
+        try {
+            let apiUrl = 'http://localhost:5097/api/CaiDatGD/Save';
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            
+            if(result.success) {
+                alert("✅ " + result.message);
+            }
+        } catch (error) {
+            alert("Đã xảy ra lỗi khi lưu!");
+        }
+    }
+
+    function copyToClipboard() {
+        const code = document.getElementById('lbl-branchCode').innerText;
+        navigator.clipboard.writeText(code).then(() => {
+            alert("Đã copy mã chi nhánh: " + code);
+        });
+    }
+
+    // Chạy khi mở trang
+    document.addEventListener("DOMContentLoaded", () => { 
+        fetchSettings(); 
+    });
+</script>
+</body>
+</html>
